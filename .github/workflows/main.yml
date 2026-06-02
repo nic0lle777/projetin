@@ -19,25 +19,18 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Configurar Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Instalar Flet e dependências
+      - name: Instalar Flet
         run: |
           python -m pip install --upgrade pip
           pip install flet
-          # Se você usar o arquivo requirements.txt, descomente a linha abaixo:
-          # pip install -r requirements.txt
 
-      - name: Compilar o APK
-        run: flet build apk
+      - name: Compilar o APK (Auto-confirmando o Flutter)
+        run: echo "y" | flet build apk
 
       - name: Disponibilizar o APK para Download
         uses: actions/upload-artifact@v4

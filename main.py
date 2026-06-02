@@ -1,32 +1,36 @@
 import flet as ft
 
 def main(page: ft.Page):
-    # Configurações de layout da página (100% seguras contra quebra de versão)
     page.title = "App Customizado"
-    page.theme_mode = "dark"          # Deixa o fundo escuro moderno
-    page.horizontal_alignment = "center" # Centraliza na horizontal
-    page.vertical_alignment = "center"   # Centraliza na vertical
+    page.theme_mode = "dark"
+    page.horizontal_alignment = "center"
+    page.vertical_alignment = "center"
     page.padding = 20
 
-    # Elemento da Imagem
-    imagem_principal = ft.Image(
-        src="imagem.png",             # Procura por assets/imagem.png
-        width=300,
-        height=300,
-        fit="contain",
-        border_radius=20              # Simplificado e funcional
+    # Criando os botões com as imagens que você enviou
+    def criar_botao(nome_imagem, texto):
+        return ft.Column(
+            [
+                ft.Image(src=nome_imagem, width=100, height=100),
+                ft.Text(texto, color="white", weight="bold")
+            ],
+            alignment="center",
+            horizontal_alignment="center"
+        )
+
+    # Exibindo suas imagens como botões
+    # O Flet buscará exatamente esses arquivos na pasta assets
+    botoes = ft.Row(
+        [
+            criar_botao("gato.png", "Home"),
+            criar_botao("galeria.png", "Fotos"),
+            criar_botao("cartas.png", "Jogos"),
+            criar_botao("engrenagem.png", "Config"),
+        ],
+        alignment="center",
+        wrap=True
     )
 
-    # Elemento de Texto
-    texto_principal = ft.Text(
-        "Coloque sua mensagem aqui!",
-        size=24,
-        weight="bold",
-        color="white"
-    )
+    page.add(botoes)
 
-    # Adiciona os elementos de forma sequencial na tela
-    page.add(imagem_principal, texto_principal)
-
-# Executa o app indicando a pasta de arquivos estáticos
 ft.app(target=main, assets_dir="assets")

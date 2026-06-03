@@ -1,12 +1,7 @@
 import flet as ft
 import time
-import sys
 
 def main(page: ft.Page):
-    # Proteção: Se estivermos rodando no ambiente de build do GitHub, não fazemos nada
-    if "python" in sys.executable and "site-packages" in __file__:
-        return
-
     page.title = "App Nicolle"
     page.theme_mode = "dark"
     page.bgcolor = "#121212"
@@ -15,7 +10,7 @@ def main(page: ft.Page):
     def carregar_home():
         page.clean()
         header = ft.Row([ft.Text("ONLINE", size=10, color="green"), ft.Icon(ft.icons.CIRCLE, color="green", size=8)], alignment="end", padding=15)
-        gato = ft.Image(src="gato.png", width=180, error_content=ft.Text("Gato sumiu!"))
+        gato = ft.Image(src="gato.png", width=180)
         
         def criar_btn(img_nome):
             return ft.Container(
@@ -35,10 +30,7 @@ def main(page: ft.Page):
 
     def mostrar_transicao():
         page.add(ft.Container(
-            content=ft.Column([
-                ft.Text("Bem-vindo(a)!", size=24, color="pink"),
-                ft.Text("De: Nicolle para: Jessica", size=18, color="white")
-            ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+            content=ft.Column([ft.Text("Bem-vindo(a)!", size=24, color="pink")], alignment=ft.MainAxisAlignment.CENTER),
             alignment=ft.alignment.center, expand=True
         ))
         page.update()
@@ -47,5 +39,4 @@ def main(page: ft.Page):
 
     mostrar_transicao()
 
-if __name__ == "__main__":
-    ft.app(target=main, assets_dir="assets")
+ft.app(target=main, assets_dir="assets")

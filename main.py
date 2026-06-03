@@ -1,33 +1,62 @@
 import flet as ft
 
 def main(page: ft.Page):
+    page.title = "App Nicolle"
     page.theme_mode = "dark"
     page.fonts = {"Pixel": "https://fonts.gstatic.com/s/pressstart2p/v14/e3t4euO8T-267oIAQAu6jDQyK0n8-2xTh-o.woff2"}
-    page.theme = ft.Theme(font_family="Pixel") # Fonte estilo pixel em todo app
+    page.theme = ft.Theme(font_family="Pixel")
+    page.horizontal_alignment = "center"
 
-    # Conteúdo das telas
-    def ir_para_home(e):
-        coluna_principal.controls = [img_gato, texto_boas_vindas, row_botoes]
-        page.update()
+    # --- FUNÇÕES DAS TELAS ---
 
-    # Função simplificada dos botões
-    def criar_botao(img, texto, acao):
-        return ft.GestureDetector(
-            content=ft.Column([ft.Image(src=img, width=80), ft.Text(texto, size=10)], horizontal_alignment="center"),
-            on_tap=acao
+    def ir_para_jogos(e):
+        page.clean()
+        page.add(
+            ft.Text("JOGOS", size=20),
+            ft.ListView([ft.ListTile(title=ft.Text(f"Jogo {i}")) for i in range(1, 4)], expand=True),
+            ft.ElevatedButton("Voltar", on_click=carregar_home)
         )
 
-    # Elementos fixos
-    img_gato = ft.Image(src="gato.png", width=150)
-    texto_boas_vindas = ft.Text("Olá, Amor!", size=20)
-    row_botoes = ft.Row([
-        criar_botao("galeria.png", "Fotos", None),
-        criar_botao("cartas.png", "Cartas", None),
-        criar_botao("engrenagem.png", "Config", None)
-    ], alignment="center")
+    def ir_para_album(e):
+        page.clean()
+        grid = ft.GridView(expand=True, max_extent=150, spacing=10)
+        for _ in range(4): # 4 espaços vazios
+            grid.controls.append(ft.Container(bgcolor="#333333", border_radius=10, height=150))
+        page.add(ft.Text("ALBUM"), grid, ft.ElevatedButton("Voltar", on_click=carregar_home))
 
-    coluna_principal = ft.Column([img_gato, texto_boas_vindas, row_botoes], alignment="center")
-    
-    page.add(coluna_principal, ft.Text("Criado por: Nicolle | v1.0", size=8, color="grey"))
+    def ir_para_config(e):
+        page.clean()
+        page.add(
+            ft.Text("CONFIG"),
+            ft.TextField(label="Nome de usuário"),
+            ft.Switch(label="Modo Noturno", value=True),
+            ft.Text("Versão 1.0"),
+            ft.Text("Criado por Nicolle"),
+            ft.ElevatedButton("Voltar", on_click=carregar_home)
+        )
+
+    # --- TELA HOME (PRINCIPAL) ---
+
+    def carregar_home(e):
+        page.clean()
+        
+        # Botões
+        def b(img, txt, acao):
+            return ft.Container(
+                content=ft.Row([ft.Image(src=img, width=30), ft.Text(txt, size=10)]),
+                bgcolor="#333333", padding=15, border_radius=20, width=140, height=70, on_click=acao
+            )
+
+        conteudo = ft.Stack([
+            ft.Column([
+                ft.Container(height=100), # Espaço para o Gato
+                ft.Row([b("galeria.png", "FOTOS", ir_para_album), b("cartas.png", "CARTAS", None)], alignment="center", spacing=10),
+                ft.Row([b("controle.png", "JOGOS", ir_para_jogos), b("engrenagem.png", "CONFIG", ir_para_config)], alignment="center", spacing=10)
+            ], horizontal_alignment="center"),
+            ft.Image(src="gato.png", width=100, top=0, left=130) # Gato posicionado
+        ])
+        page.add(conteudo)
+
+    carregar_home(None)
 
 ft.app(target=main, assets_dir="assets")

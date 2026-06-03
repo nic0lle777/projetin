@@ -7,53 +7,48 @@ def main(page: ft.Page):
     page.bgcolor = "#121212"
     page.padding = 0
 
-    # --- TELA DE TRANSIÇÃO (Abertura Fofa) ---
+    # TELA DE TRANSIÇÃO
     def mostrar_transicao():
-        container = ft.Container(
+        page.add(ft.Container(
             content=ft.Column([
-                ft.Text("Bem-vindo(a)!", size=20, color="pink"),
-                ft.Text("De: Nicolle para: Jessica", size=15, color="white")
-            ], alignment=ft.MainAxisAlignment.CENTER),
-            bgcolor="#121212",
-            alignment=ft.alignment.center,
-            expand=True
-        )
-        page.add(container)
+                ft.Text("Bem-vindo(a)!", size=24, color="pink"),
+                ft.Text("De: Nicolle para: Jessica", size=18, color="white")
+            ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+            alignment=ft.alignment.center, expand=True
+        ))
         page.update()
-        time.sleep(2) # Segura a mensagem por 2 segundos
+        time.sleep(2)
         carregar_home()
 
-    # --- TELA HOME (Com todas as funções) ---
+    # TELA PRINCIPAL
     def carregar_home():
         page.clean()
         
-        header = ft.Row([ft.Text("ONLINE", size=10), ft.Icon(ft.icons.CIRCLE, color="green", size=8)], alignment="end", padding=15)
+        # Header
+        header = ft.Row([ft.Text("ONLINE", size=10, color="green"), ft.Icon(ft.icons.CIRCLE, color="green", size=8)], alignment="end", padding=15)
         
-        # Botões funcionais
-        def criar_btn(texto, icone, destino):
+        # Gato
+        gato = ft.Image(src="gato.png", width=180, error_content=ft.Text("Gato sumiu!"))
+        
+        # Botões usando suas imagens
+        def criar_btn(img_nome):
             return ft.Container(
-                content=ft.Column([ft.Icon(icone, size=40), ft.Text(texto, size=10)], alignment="center"),
-                bgcolor="#202020", border_radius=15, width=150, height=150,
-                on_click=destino
+                content=ft.Image(src=img_nome, width=120),
+                bgcolor="#202020", border_radius=15, width=150, height=150, alignment=ft.alignment.center
             )
 
         layout = ft.Column([
             header,
-            ft.Image(src="gato.png", width=180),
-            ft.Row([
-                criar_btn("FOTOS", ft.icons.PHOTO, lambda e: print("Abrir fotos")), 
-                criar_btn("CARTAS", ft.icons.MAIL, lambda e: print("Abrir cartas"))
-            ], alignment="center", spacing=10),
-            ft.Row([
-                criar_btn("JOGOS", ft.icons.GAMEPAD, lambda e: print("Abrir jogos")), 
-                criar_btn("CONFIG", ft.icons.SETTINGS, lambda e: print("Abrir config"))
-            ], alignment="center", spacing=10)
+            gato,
+            ft.Row([criar_btn("galeria.png"), criar_btn("cartas.png")], alignment="center", spacing=10),
+            ft.Row([criar_btn("controle.png"), criar_btn("engrenagem.png")], alignment="center", spacing=10)
         ], horizontal_alignment="center")
         
         page.add(layout)
         page.update()
 
-    # Inicia o app pela transição
     mostrar_transicao()
 
+# O assets_dir="assets" diz ao Flet que os arquivos estão lá, 
+# por isso no src usamos apenas o nome do arquivo.
 ft.app(target=main, assets_dir="assets")

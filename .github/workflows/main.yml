@@ -1,38 +1,41 @@
-name: Build Android APK
+name: Build APK
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch: # Permite rodar o processo manualmente no GitHub
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-scale: ubuntu-latest
     steps:
-      - name: Baixar o código
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Configurar Python
-        uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.10'
 
-      - name: Configurar Flutter (Usado pelo Flet)
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
 
-      - name: Instalar Flet
-        run: |
-          pip install flet
-          pip install -r requirements.txt
+      - name: Install Flet
+        run: pip install flet
 
-      - name: Compilar o APK
+      - name: Build APK
         run: flet build apk
 
-      - name: Disponibilizar o APK para Download
-        uses: actions/upload-artifact@v4
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
         with:
-          name: MeuApp-APK
+          name: app-release
           path: build/apk/**/*.apk

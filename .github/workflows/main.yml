@@ -10,29 +10,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Baixar o código do repositório
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Configurar Java 17
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Configurar Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Instalar dependências
+      - name: Install Flet
         run: |
           python -m pip install --upgrade pip
           pip install flet
 
-      - name: Compilar o APK
-        run: flet build apk --assets assets
+      - name: Build APK
+        run: flet build apk
 
-      - name: Disponibilizar o APK para Download
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: MeuApp-APK

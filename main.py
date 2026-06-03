@@ -1,7 +1,12 @@
 import flet as ft
 import time
+import sys
 
 def main(page: ft.Page):
+    # Proteção: Se estivermos rodando no ambiente de build do GitHub, não fazemos nada
+    if "python" in sys.executable and "site-packages" in __file__:
+        return
+
     page.title = "App Nicolle"
     page.theme_mode = "dark"
     page.bgcolor = "#121212"
@@ -29,7 +34,6 @@ def main(page: ft.Page):
         page.update()
 
     def mostrar_transicao():
-        # Container de transição
         page.add(ft.Container(
             content=ft.Column([
                 ft.Text("Bem-vindo(a)!", size=24, color="pink"),
@@ -41,9 +45,7 @@ def main(page: ft.Page):
         time.sleep(2)
         carregar_home()
 
-    # Inicia a transição após um pequeno delay para garantir que a página carregou
     mostrar_transicao()
 
-# ISSO É O MAIS IMPORTANTE PARA O GITHUB BUILD:
 if __name__ == "__main__":
     ft.app(target=main, assets_dir="assets")

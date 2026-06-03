@@ -7,7 +7,6 @@ def main(page: ft.Page):
     page.bgcolor = "#121212"
     page.padding = 0
 
-    # TELA DE TRANSIÇÃO
     def mostrar_transicao():
         page.add(ft.Container(
             content=ft.Column([
@@ -20,17 +19,14 @@ def main(page: ft.Page):
         time.sleep(2)
         carregar_home()
 
-    # TELA PRINCIPAL
     def carregar_home():
         page.clean()
         
-        # Header
         header = ft.Row([ft.Text("ONLINE", size=10, color="green"), ft.Icon(ft.icons.CIRCLE, color="green", size=8)], alignment="end", padding=15)
         
-        # Gato
+        # O Flet busca os arquivos na pasta 'assets' automaticamente
         gato = ft.Image(src="gato.png", width=180, error_content=ft.Text("Gato sumiu!"))
         
-        # Botões usando suas imagens
         def criar_btn(img_nome):
             return ft.Container(
                 content=ft.Image(src=img_nome, width=120),
@@ -49,6 +45,4 @@ def main(page: ft.Page):
 
     mostrar_transicao()
 
-# O assets_dir="assets" diz ao Flet que os arquivos estão lá, 
-# por isso no src usamos apenas o nome do arquivo.
 ft.app(target=main, assets_dir="assets")

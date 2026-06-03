@@ -1,61 +1,41 @@
 import flet as ft
 
 def main(page: ft.Page):
-    # Recupera preferências salvas
-    page.theme_mode = page.client_storage.get("theme") or "dark"
-    nome_usuario = page.client_storage.get("user_name") or "Visitante"
-    
-    page.fonts = {"Pixel": "https://fonts.gstatic.com/s/pressstart2p/v14/e3t4euO8T-267oIAQAu6jDQyK0n8-2xTh-o.woff2"}
-    page.theme = ft.Theme(font_family="Pixel")
+    page.title = "App Nicolle"
+    page.theme_mode = "dark"
+    page.bgcolor = "#121212"
     page.padding = 0
 
-    def mudar_tema(e):
-        page.theme_mode = "light" if page.theme_mode == "dark" else "dark"
-        page.client_storage.set("theme", page.theme_mode)
+    # Tenta carregar a fonte, se falhar, usa a padrão
+    try:
+        page.fonts = {"Pixel": "https://fonts.gstatic.com/s/pressstart2p/v14/e3t4euO8T-267oIAQAu6jDQyK0n8-2xTh-o.woff2"}
+        page.theme = ft.Theme(font_family="Pixel")
+    except:
+        pass
+
+    def carregar_interface():
+        page.clean()
+        
+        # Header simples
+        header = ft.Row([ft.Text("ONLINE", size=10), ft.Icon(ft.icons.CIRCLE, color="green", size=8)], alignment="end", padding=15)
+        
+        # Botões (usando ícones do Flet primeiro para não depender de arquivos agora)
+        def criar_btn(texto, icone):
+            return ft.Container(
+                content=ft.Column([ft.Icon(icone, size=40), ft.Text(texto, size=10)], alignment="center"),
+                bgcolor="#202020", border_radius=15, width=150, height=150
+            )
+
+        layout = ft.Column([
+            header,
+            ft.Image(src="gato.png", width=180, error_content=ft.Text("Gato sumiu!")),
+            ft.Row([criar_btn("FOTOS", ft.icons.PHOTO), criar_btn("CARTAS", ft.icons.MAIL)], alignment="center", spacing=10),
+            ft.Row([criar_btn("JOGOS", ft.icons.GAMEPAD), criar_btn("CONFIG", ft.icons.SETTINGS)], alignment="center", spacing=10)
+        ], horizontal_alignment="center")
+        
+        page.add(layout)
         page.update()
 
-    def salvar_nome(e):
-        page.client_storage.set("user_name", e.control.value)
-
-    # --- TELAS ---
-    def ir_para_album(e):
-        page.clean()
-        # Galeria fofa que ocupa a tela toda
-        page.add(
-            ft.Row([ft.IconButton(ft.icons.ARROW_BACK, on_click=carregar_home)]),
-            ft.GridView(
-                controls=[ft.Image(src=f"foto{i}.png", fit="cover", border_radius=15) for i in range(1, 5)],
-                runs_count=2, spacing=5, run_spacing=5, expand=True
-            )
-        )
-
-    def carregar_home(e=None):
-        page.clean()
-        # Header "Online"
-        header = ft.Row([ft.Text("ONLINE", size=8), ft.Icon(ft.icons.CIRCLE, color="green", size=10)], alignment="end", padding=10)
-        
-        # Grid de botões proporcionais
-        botoes = ft.GridView(
-            controls=[
-                ft.Container(content=ft.Column([ft.Image("galeria.png", width=50), ft.Text("FOTOS")], alignment="center"), bgcolor="#333333", border_radius=20, on_click=ir_para_album),
-                ft.Container(content=ft.Column([ft.Image("cartas.png", width=50), ft.Text("CARTAS")], alignment="center"), bgcolor="#333333", border_radius=20),
-                ft.Container(content=ft.Column([ft.Image("controle.png", width=50), ft.Text("JOGOS")], alignment="center"), bgcolor="#333333", border_radius=20),
-                ft.Container(content=ft.Column([ft.Image("engrenagem.png", width=50), ft.Text("CONFIG")], alignment="center"), bgcolor="#333333", border_radius=20, on_click=ir_para_config)
-            ],
-            runs_count=2, max_extent=200, child_aspect_ratio=1.0, padding=20
-        )
-        
-        page.add(header, ft.Image("gato.png", width=200), botoes)
-
-    def ir_para_config(e):
-        page.clean()
-        page.add(
-            ft.Text("CONFIGURAÇÕES"),
-            ft.TextField(label="Apelido", value=nome_usuario, on_change=salvar_nome),
-            ft.Switch(label="Modo Noturno", value=(page.theme_mode=="dark"), on_change=mudar_tema),
-            ft.ElevatedButton("Voltar", on_click=carregar_home)
-        )
-
-    carregar_home()
+    carregar_interface()
 
 ft.app(target=main, assets_dir="assets")

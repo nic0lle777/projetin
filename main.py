@@ -5,8 +5,13 @@ def main(page: ft.Page):
     page.theme_mode = page.client_storage.get("theme") or "dark"
     nome_usuario = page.client_storage.get("user_name") or "Visitante"
     
-    page.fonts = {"Pixel": "https://fonts.gstatic.com/s/pressstart2p/v14/e3t4euO8T-267oIAQAu6jDQyK0n8-2xTh-o.woff2"}
-    page.theme = ft.Theme(font_family="Pixel")
+    # Carrega a fonte apenas se não estiver no ambiente de build do GitHub
+    try:
+        page.fonts = {"Pixel": "https://fonts.gstatic.com/s/pressstart2p/v14/e3t4euO8T-267oIAQAu6jDQyK0n8-2xTh-o.woff2"}
+        page.theme = ft.Theme(font_family="Pixel")
+    except:
+        pass
+
     page.padding = 0
 
     def mudar_tema(e):
